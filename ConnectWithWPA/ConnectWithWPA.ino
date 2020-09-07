@@ -39,8 +39,14 @@ char ssid[] = "dd-wrt";     //  your network SSID (name)
 char pass[] = "brady123";  // your network password
 int status = WL_IDLE_STATUS;     // the Wifi radio's status
 
-int PIN_SWITCH = 8; // pin used for the switch
-int PIN_SIGNAL = 6; // pin used for the LED
+
+#if USE_ESP8266
+int PIN_SWITCH = 13; // pin used for the switch (see https://randomnerdtutorials.com/esp8266-pinout-reference-gpios/)
+int PIN_SIGNAL = LED_BUILTIN; // pin used for the LED
+#else
+int PIN_SWITCH = 3; // pin used for the switch
+int PIN_SIGNAL = 1; // pin used for the LED
+#endif
 
 byte hueBridgeAddr[] = {192, 168, 1, 183};
 int led_last = HIGH;
@@ -69,7 +75,7 @@ void setup() {
     while (true);
   }
   #else
-  Serial.println("skipping WiFi status check");
+  //Serial.println("skipping WiFi status check");
   #endif
 
   //String fv = WiFi.firmwareVersion();
@@ -99,6 +105,7 @@ void wifiSetup(void)
 void loop() {
 
   if (!booted) {
+    Serial.println("dwah");
     digitalWrite(PIN_SIGNAL, LOW);
     delay(3000);
     digitalWrite(PIN_SIGNAL, HIGH);
@@ -119,7 +126,7 @@ void loop() {
     onOff = queryHues();
     commandHues(onOff);
 
-    Serial.print("button pressed");
+    Serial.println("button pressed");
 
     delay(5000);
   }
@@ -128,7 +135,7 @@ void loop() {
     status = WiFi.status();
     
     if(status == WL_CONNECTED) {
-      Serial.print("flashing LED ");
+      Serial.println("flashing LED ");
       digitalWrite(PIN_SIGNAL, led_last);
     
       led_last = led_last == LOW ? HIGH : LOW;
@@ -177,7 +184,7 @@ void printCurrentNet() {
   byte bssid[6];
   
   #if USE_ESP8266
-  memcpy(bssid, WiFi.BSSID(0), sizeof(bssid));
+  //memcpy(bssid, WiFi.BSSID(0), sizeof(bssid));
   #else
   WiFi.BSSID(bssid);
   #endif
