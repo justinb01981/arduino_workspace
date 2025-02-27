@@ -57,7 +57,7 @@ void setup() {
     pinMode(buttons[i], INPUT_PULLUP);
   }
   bleGamepad.begin();
-  bleGamepad.setAutoReport(false); // to disable auto reporting, and then use bleGamepad.sendReport(); as needed
+  //bleGamepad.setAutoReport(false); // to disable auto reporting, and then use bleGamepad.sendReport(); as needed
   Serial.println("Starting BLE work!");
 
   leds[0] = CRGB::Red;

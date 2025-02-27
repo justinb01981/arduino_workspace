@@ -11,7 +11,7 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
-#include <Arduino_LSM6DSOX.h> // for lcd
+#include <Arduino_LSM6DSOX.h> 
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 32 // OLED display height, in pixels
@@ -49,7 +49,7 @@ SerialC Serialc;
 
 const int HI = 128;
 
-// Justin 2-6-25 converting to esp32 pins
+// Justin 2-6-25 converting to esp32 pins? see bootloader remapping for nano esp32 
 int led[] = {A0,A1,A2};           // the pin that the LED is attached to
 int i2cgpio[] = {SDA, SCL};        // a4,a5 on arduino = 11,12 on esp32
 
@@ -119,7 +119,7 @@ void setup() {
 
   Serial.begin(115200); // always first
 
-  Wire.begin(i2cgpio[0], i2cgpio[1]); // init i2c on these pins, leaving @ default is bad idea when mixing boards
+  Wire.begin();//Wire.begin(i2cgpio[0], i2cgpio[1]); // init i2c on these pins, leaving @ default is bad idea when mixing boards
 
   setupDisplay();
   

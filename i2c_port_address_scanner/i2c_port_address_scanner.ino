@@ -10,7 +10,7 @@
 
 void setup() {
   Serial.begin(115200);
-  while (!Serial);             // Leonardo: wait for serial monitor
+  //while (!Serial);             // Leonardo: wait for serial monitor
   Serial.println("\n\nI2C Scanner to scan for devices on each port pair D0 to D7");
   scanPorts();
 }

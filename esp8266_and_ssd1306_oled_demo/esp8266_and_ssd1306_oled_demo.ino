@@ -32,7 +32,7 @@
 
 // For a connection via I2C using the Arduino Wire include:
 #include <Wire.h>               // Only needed for Arduino 1.6.5 and earlier
-#include "SSD1306Wire.h"        // legacy: #include "SSD1306.h"
+#include "SSD1306.h"        // legacy: #include "SSD1306.h"
 // OR #include "SH1106Wire.h"   // legacy: #include "SH1106.h"
 
 // For a connection via I2C using brzo_i2c (must be installed) include:

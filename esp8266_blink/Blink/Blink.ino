@@ -8,7 +8,7 @@
 #include "Arduino.h"
 
 // On a NodeMCU board the built-in led is on GPIO pin 2
-#define LED_BUILTIN 15    
+#define LED_BUILTIN 24    
 
 void setup()
 {
@@ -24,7 +24,7 @@ void loop()
   // turn the LED on (the built-in led on a Node MCU board is active low)
   digitalWrite(LED_BUILTIN, LOW);
   // wait for a second
-  delay(1000);
+  delay(20);
   // turn the LED off (the built-in led on a Node MCU board is active low)
   digitalWrite(LED_BUILTIN, HIGH);
 

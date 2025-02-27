@@ -30,13 +30,14 @@
 #else
 #include <WiFiNINA.h>
 #endif
- 
-//#include <Ethernet.h>
 
-#define HUE_USERNAME "KMCUJg9FwBOiN2uJbfLirCnPQjbcBZKZu4RQvPCo"
+#include <string>
 
-char ssid[] = "dd-wrt";     //  your network SSID (name)
-char pass[] = "brady123";  // your network password
+
+#define HUE_USERNAME "dbAS-qjEIcxovPQg1tt-EUZq6osUxBTKml5Cwcyt"
+
+char ssid[] = "WuTang4Eva";     //  your network SSID (name)
+char pass[] = "test-test-test";  // your network password
 int status = WL_IDLE_STATUS;     // the Wifi radio's status
 
 
@@ -48,7 +49,7 @@ int PIN_SWITCH = 3; // pin used for the switch
 int PIN_SIGNAL = 1; // pin used for the LED
 #endif
 
-byte hueBridgeAddr[] = {192, 168, 1, 183};
+::byte hueBridgeAddr[] = {192, 168, 1, 151};
 int led_last = HIGH;
 int booted = 0;
 
@@ -105,7 +106,7 @@ void wifiSetup(void)
 void loop() {
 
   if (!booted) {
-    Serial.println("dwah");
+    Serial.println("ALIVE!!!");
     digitalWrite(PIN_SIGNAL, LOW);
     delay(3000);
     digitalWrite(PIN_SIGNAL, HIGH);
@@ -286,9 +287,14 @@ int commandHues(bool on) {
     delay(2000);
 
     Serial.print("response:\r\n");
+
+    using namespace std;
+
+    std::string* buf = new std::string("");
     while (client.available()) {
-      char c = client.read();
-      Serial.write(c);
+      *buf += client.read();
+      //char c = client.read();
+      Serial.write(buf->c_str());
     }
     Serial.print("\r\n");
 
