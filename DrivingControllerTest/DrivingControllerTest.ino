@@ -16,17 +16,17 @@
 
 const unsigned int RANGE_STEER = 900;
 const unsigned int RANGE_ACCEL = 300;
-const unsigned int DIV = 6;
+const unsigned int DIV = 3;
 
 /* encoder variables */
 const int encoder_a = PIND0+2; // Green - pin - Digital
 const int encoder_b = PIND0+3; // White - pin - Digital
-long encoder = 0, cnt = -1;
+long encoder = 0, cnt = 1;
 char prv;
 
 void onChange(char prv, char cur) {
   if(prv == cur) { cnt = cnt * -1; }
-  else { encoder -= cnt; }
+  else { encoder += cnt; }
 
   // range clip
   if(encoder < 0) encoder = 0;
@@ -80,7 +80,7 @@ float x, y, z, tmp;
 float *pV = &x;
 
 // filter table
-const int FILTERLEN = 4;
+const int FILTERLEN = 1;
 float ftable[FILTERLEN];
 int ftableOff;
 
