@@ -14,9 +14,9 @@
 
 #include "Joystick.h"
 
-const unsigned int RANGE_STEER = 900;
+const unsigned int RANGE_STEER = 600; // my encoder has 600pt resolution
 const unsigned int RANGE_ACCEL = 300;
-const unsigned int DIV = 3;
+const unsigned int DIV = 6;
 
 /* encoder variables */
 const int encoder_a = PIND0+2; // Green - pin - Digital
@@ -24,23 +24,21 @@ const int encoder_b = PIND0+3; // White - pin - Digital
 long encoder = 0, cnt = 1;
 char prv;
 
-void onChange(char prv, char cur) {
+void encoderOnChange(char prv, char cur) {
   if(prv == cur) { cnt = cnt * -1; }
   else { encoder += cnt; }
 
-  // range clip
-  if(encoder < 0) encoder = 0;
-  if(encoder > RANGE_STEER*DIV) encoder = RANGE_STEER*DIV;
+
 }
 
 /* encoder int handlers */
 void encoderPinChangeA() {
-  onChange(prv, 'a');
+  encoderOnChange(prv, 'a');
   prv = 'a';
 }
 
 void encoderPinChangeB() {
-  onChange(prv, 'b');
+  encoderOnChange(prv, 'b');
   prv = 'b';
 }
 
@@ -64,9 +62,9 @@ Joystick_ Joystick(JOYSTICK_DEFAULT_REPORT_ID,
   false, false, false, false, false, false,
   false, false, true, true, true);
 
-const unsigned long gcButtonDelta = /*500*/ 20;
+const unsigned long gcButtonDelta = /*500*/ 5;
 
-unsigned int PIN_btn0 = PIND0+13;
+unsigned int PIN_btn0 = PIND0+1;
 
 unsigned long gNextTime = 0;
 float xO = 0, yO = 0, zO = 0;
@@ -116,37 +114,26 @@ void save(float x, unsigned idx) {
   if(x < min[idx]) min[idx] = x;
 }
 
-void doButton(float x, float y, float z)
-{
+void callResetEncoder(void) {
+  {
+    Serial.println("reset encoder");
 
-  if(true) 
-  {
-    zeroIMU();
-  }
-  else 
-  {
-    const int k = 0;
-    
-    if(btn_press[k])
-    {
-      Joystick.releaseButton(k);
-    }
-    else {
-      Joystick.pressButton(k);
-    }
-    btn_press[k] = !btn_press[k];
-  }
+    cnt *= -1;
+    encoder = RANGE_STEER / 2;
+  } 
 }
 
 void setup() {
 
   Serial.begin(9600);
 
-  //Wire.begin();
-
   if(!encoderInit()) {
     Serial.println("encoder init failed");
   }
+
+  // encoder takes 2 interrupts
+  pinMode(PIN_btn0, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(PIN_btn0), callResetEncoder, CHANGE);
   
   Joystick.begin(false);
 
@@ -156,19 +143,13 @@ void setup() {
   
   pinMode(A1, INPUT);
   pinMode(A2, INPUT);
-  pinMode(PIN_btn0, INPUT_PULLUP);
+  
 
   pinMode(LED_BUILTIN, OUTPUT);
 
 }
 
 void loop() {
-
-  // buttons
-  if(digitalRead(PIN_btn0) == 0) 
-  {
-    doButton(x, y, z);
-  }
 
   if(encoderReady())
   {
@@ -189,10 +170,12 @@ void loop() {
     tmp = 0;
     for(int i = 0; i < FILTERLEN; i++)  tmp += ftable[i];
     tmp /= FILTERLEN;
-    
+
     // calculate steering from encoder range to joystick range
     k = 0;
     float S = tmp/DIV;
+    if(S < 0) S = 0;
+    if(S > RANGE_STEER) S = RANGE_STEER;
     Joystick.setSteering(S);
 
     // calculate accel
@@ -223,3 +206,4 @@ void loop() {
 
   }
 }
+
