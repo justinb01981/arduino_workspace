@@ -14,7 +14,7 @@
 
 #include "Joystick.h"
 
-const unsigned int RANGE_STEER = 600; // my encoder has 600pt resolution
+const unsigned int RANGE_STEER = 1000; // my encoder has 600pt resolution
 const unsigned int RANGE_ACCEL = 300;
 const unsigned int DIV = 6;
 
@@ -27,8 +27,6 @@ char prv;
 void encoderOnChange(char prv, char cur) {
   if(prv == cur) { cnt = cnt * -1; }
   else { encoder += cnt; }
-
-
 }
 
 /* encoder int handlers */
@@ -119,7 +117,7 @@ void callResetEncoder(void) {
     Serial.println("reset encoder");
 
     cnt *= -1;
-    encoder = RANGE_STEER / 2;
+    encoder = (RANGE_STEER*DIV)/2;
   } 
 }
 
